@@ -1,0 +1,37 @@
+﻿<template id="portfolio-summary-template">
+        <div class="card" v-bind:class="[selected ? 'text-white bg-warning' : '']">
+            <div class="card-content">
+                <div class="media align-items-stretch">
+                    <div class="p-2 media-body">
+                        <input class="form-control" v-model="account.name" v-on:change="updateItem()" style="border:none; background-color:transparent; color:inherit;" />
+                        <div class="text-bold-400 mb-0"><i class="feather icon-arrow-up"></i> {{account.Price()|currency}}</div>
+                        <div class="text-bold-400 mb-0"><i class="feather icon-arrow-up"></i> {{account.Income()|currency}}</div>
+                        <div class="text-bold-400 mb-0"><i class="feather icon-arrow-up"></i> Percent: {{ (account.Income()/account.Price())  | percent }}</div>
+                        <div><a href="#" v-on:click.prevent="deleteItem()">Delete</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</template>
+
+<script>
+    var portfolio_summary = Vue.component('portfolio-summary', {
+        template: '#portfolio-summary-template',
+        props: ['account','user','selected'],
+        methods: {
+            async deleteItem() {
+                var item = this.account;
+
+                const { data } = await axios.post('/api/account/delete', new c3o.Core.Data.InvestmentResponse(item));
+
+                var index = _.findIndex(this.user.accounts, { accountId: item.accountId });
+
+                this.user.accounts.splice(index, 1)
+            },
+            async updateItem() {
+                var item = this.account;
+                const { data } = await axios.post('/api/account/update', new c3o.Core.Data.InvestmentResponse(item));
+            },
+        }
+    });
+</script>

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Portfolio.Data.Context\Portfolio.Data.Context.csproj" />
+    <ProjectReference Include="..\Portfolio.Data.Model\Portfolio.Data.Model.csproj" />
+    <ProjectReference Include="..\Portfolio.Data.Service\Portfolio.Data.Service.csproj" />
+  </ItemGroup>
+
+</Project>

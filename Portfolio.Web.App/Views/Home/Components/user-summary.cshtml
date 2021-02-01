@@ -1,0 +1,107 @@
+﻿<template id="user-summary-template">
+
+    <div class="row grouped-multiple-statistics-card" v-if="user">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                                                    
+                        <div class="col-lg-6 col-xl-3 col-sm-6 col-12" style="border-right: 1px solid rgba(0,0,0,.125);">
+                            <div class="d-flex align-items-start mb-sm-1 mb-xl-0 border-right-blue-grey border-right-lighten-5">
+                                <span class="card-icon primary d-flex justify-content-center mr-3">
+                                    <i class="icon p-1 icon-bar-chart customize-icon font-large-2 p-1"></i>
+                                </span>
+                                <div class="stats-amount mr-3">
+                                    <h5 class="heading-text text-bold-400">{{user.Price()|currency}}</h5>
+                                    <p class="sub-heading">Total</p>
+                                </div>
+                                @*<span class="inc-dec-percentage">
+                                    <small class="success"><i class="fa fa-long-arrow-up"></i> 5.2%</small>
+                                </span>*@
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-xl-3 col-sm-6 col-12" style="border-right: 1px solid rgba(0,0,0,.125);">
+                            <div class="d-flex align-items-start border-right-blue-grey border-right-lighten-5">
+                                <span class="card-icon success d-flex justify-content-center mr-3">
+                                    <i class="icon p-1 icon-graph customize-icon font-large-2 p-1"></i>
+                                </span>
+                                <div class="stats-amount mr-3">
+                                    <h5 class="heading-text text-bold-400">{{user.Income()|currency}}</h5>
+                                    <p class="sub-heading">Yearly Income</p>
+                                </div>
+                                @*<span class="inc-dec-percentage">
+                                    <small class="success"><i class="fa fa-long-arrow-up"></i> {{ (user.Income()/user.Price())  | percent }}</small>
+                                </span>*@
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-xl-3 col-sm-6 col-12" style="border-right: 1px solid rgba(0,0,0,.125);">
+                            <div class="d-flex align-items-start mb-sm-1 mb-xl-0 border-right-blue-grey border-right-lighten-5">
+                                <span class="card-icon danger d-flex justify-content-center mr-3">
+                                    <i class="icon p-1 icon-pie-chart customize-icon font-large-2 p-1"></i>
+                                </span>
+                                <div class="stats-amount mr-3">
+                                    <h5 class="heading-text text-bold-400">{{ (user.Income()/user.Price())  | percent }}</h5>
+                                    <p class="sub-heading">Percent Income</p>
+                                </div>
+                                @*<span class="inc-dec-percentage">
+                                    <small class="danger"><i class="fa fa-long-arrow-down"></i> 2.0%</small>
+                                </span>*@
+                            </div>
+                        </div>
+
+                        @*<div class="col-lg-6 col-xl-3 col-sm-6 col-12">
+                            <div class="d-flex align-items-start">
+                                <span class="card-icon warning d-flex justify-content-center mr-3">
+                                    <i class="icon p-1 icon-basket-loaded customize-icon font-large-2 p-1"></i>
+                                </span>
+                                <div class="stats-amount mr-3">
+                                    <h3 class="heading-text text-bold-600">13700</h3>
+                                    <p class="sub-heading">Orders</p>
+                                </div>
+                                <span class="inc-dec-percentage">
+                                    <small class="danger"><i class="fa fa-long-arrow-down"></i> 13.6%</small>
+                                </span>
+                            </div>
+                        </div>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>
+
+<script>
+    var user_summary = Vue.component('user-summary', {
+        template: '#user-summary-template',
+        props: ['user']
+        //computed: {
+        //    totalPrice: function () {
+        //        if (!this.account.investments) {
+        //            return 0;
+        //        }
+        //        return this.account.investments.reduce(function (total, item) {
+        //            return total + (item.price * item.quantity);
+        //        }, 0);
+        //    },
+        //    totalIncome: function () {
+        //        if (!this.account.investments) {
+        //            return 0;
+        //        }
+        //        return this.account.investments.reduce(function (total, item) {
+        //            return total + (item.price * item.quantity * (item.dividend / 100));
+        //        }, 0);
+        //    }
+        //},
+        //methods: {
+        //    async delete() {
+        //        const { data } = await axios.delete('/api/account', this.account);
+        //        this.account = data;
+        //        this.user.accounts.push(this.account);
+        //    }
+        //}
+    });
+</script>

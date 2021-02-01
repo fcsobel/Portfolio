@@ -1,0 +1,198 @@
+﻿<template id="portfolio-list-template">
+    <div>
+        @*<div v-if="account.investments.length === 0">Loading...</div>*@
+        <table class="table table-bordered table-sm table-striped" style="margin:0; padding:0;">
+            <thead>
+                <tr>
+                    <td><a href="#" v-on:click.prevent="sort('ticker')">Name</a></td>
+                    <td><a href="#" v-on:click.prevent="sort('quantity')">Quantity</a></td>
+                    <td><a href="#" v-on:click.prevent="sort('price')">Price</a></td>
+                    <td><a href="#" v-on:click.prevent="sort('Total')">Total</a></td>
+                    <td><a href="#" v-on:click.prevent="sort('Dividend')">Dividend</a></td>
+                    <td><a href="#" v-on:click.prevent="sort('Income')">Income</a></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item, index) in account.investments" :key="item.id" style="text-align:right;">
+                    <td style="margin:0; padding:0; position:relative;" >
+                        @*<a href="/home/portfolio/"> {{item.ticker}}</a>*@
+                        <input class="form-control" v-model="item.ticker" v-on:change="updateItem(item, index)" style="border:none; background-color:transparent; " />
+                        <div style="position:absolute; top:6px; right:6px;">{{item.name}}</div>
+                    </td>
+                    <td style="margin:0; padding:0;">
+                        <input class="form-control" v-model.number="item.quantity" v-on:change="updateItem(item, index)" style="border:none; background-color:transparent;  text-align:right;" />
+                    </td>
+                    <td>{{item.price | currency}}</td>
+                    <td>{{item.Price() | currency('$',0)}}</td>
+                    <td><span v-if="item.dividend>0">{{(item.dividend / 100) | percent(1)}}</span></td>
+                    <td><span v-if="item.dividend>0">{{item.Income() | currency('$',0)}}</span></td>
+                    <td><a href="#" v-on:click.prevent="removeItem(item, index)">Delete</a></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="success" style="text-align:right;">
+                    <td style="margin:0; padding:0;">
+                        <input ref="newstock" class="form-control" v-model="newItem.ticker" v-on:change="addItem(newItem)" style="border:none; background-color:transparent; " />
+                    </td>
+                    <td style="margin:0; padding:0;">
+                        <input class="form-control" v-model.number="newItem.quantity" v-on:change="addItem(newItem)" style="border:none; background-color:transparent;  text-align:right;" />
+                    </td>
+                    <td style="margin:0; padding:0;"><input class="form-control"  style="border:none; background-color:transparent;  text-align:right;"/></td>
+                    <td>{{totalPrice | currency}}</td>
+                    <td>{{ (totalIncome/ totalPrice)  | percent }}</td>
+                    <td>{{totalIncome | currency}}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+</template>
+
+<script>
+    var portfolio_list = Vue.component('portfolio-list', {
+        template: '#portfolio-list-template',
+        props: ['account'],
+        data: function () {
+            return {
+                newItem: { quantity: null },
+                ascending: true
+            };
+        },
+        methods: {
+            sort(column) {
+                if (column == 'ticker') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.ticker > b.ticker) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.ticker < b.ticker) ? 1 : -1)
+                    }                    
+                }
+                if (column == 'quantity') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.quantity > b.quantity) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1)
+                    }
+                }
+                if (column == 'price') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.price > b.price) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.price < b.price) ? 1 : -1)
+                    }
+                }
+                if (column == 'Dividend') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.dividend > b.dividend) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.dividend < b.dividend) ? 1 : -1)
+                    }
+                }
+                if (column == 'Total') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.Price() > b.Price()) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.Price() < b.Price()) ? 1 : -1)
+                    }
+                }
+                if (column == 'Income') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.Income()  > b.Income()) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.Income()  < b.Income()) ? 1 : -1)
+                    }
+                }
+                this.ascending = !this.ascending;                    
+            },
+            async removeItem(item, index) {
+                this.account.investments.splice(index, 1)
+                item.quantity = 0;
+                const { data } = await axios.post('/api/account', new c3o.Core.Data.InvestmentResponse(item));
+            },
+            async updateItem(item, index) {
+
+                const { data } = await axios.post('/api/account', new c3o.Core.Data.InvestmentResponse(item));
+
+                item.ticker = data.ticker;
+                item.price = data.price;
+                item.dividend = data.dividend;
+                item.quantity = data.quantity;
+                //item.investmentId = data.investmentId;
+
+                // remove item 
+                if (item.quantity == 0) {
+                    this.account.investments.splice(index, 1)
+                }
+            },
+            async refreshItem(item) {
+                if (item.quantity > 0) {
+                    const { data } = await axios.post('/api/account/refresh', new c3o.Core.Data.InvestmentResponse(item));
+                    if (data) {
+                        //item.ticker = data.ticker;
+                        item.price = data.price;
+                        item.dividend = data.dividend;
+                        item.quantity = data.quantity;
+                        //console.log(data, item);
+                        //this.newItem = item;
+                    }
+                    //item.investmentId = data.investmentId;
+                }
+                
+            },
+
+            async addItem(item) {
+
+                if (item.quantity > 0) {
+
+                    item.accountId = this.account.accountId;
+
+                    const { data } = await axios.post('/api/account', new c3o.Core.Data.InvestmentResponse(item));
+
+                    if (data.quantity > 0) {
+                        this.account.investments.push(new c3o.Core.Data.Investment(data));
+
+                        this.newItem = { quantity: null };
+
+                        this.$refs.newstock.focus();
+                    }
+                }
+            },
+
+        },
+        computed: {
+            totalPrice: function () {
+                if (!this.account.investments) {
+                    return 0;
+                }
+                return this.account.investments.reduce(function (total, item) {
+                    return total + (item.price * item.quantity);
+                }, 0);
+            },
+            totalIncome: function () {
+                if (!this.account.investments) {
+                    return 0;
+                }
+                return this.account.investments.reduce(function (total, item) {
+                    return total + (item.price * item.quantity * (item.dividend / 100));
+                }, 0);
+            }
+        }
+        //computed: {
+        //    totalPrice: function () {
+        //        var sum = 0;
+        //        this.account.investments.forEach(e => {
+        //            sum += e.price;
+        //        });
+        //        return sum
+        //    }
+        //}
+    });
+</script>

@@ -1,0 +1,58 @@
+﻿<template id="portfolio-add-template">
+    <div>
+
+        <form method="post" action="#">
+            <div class="form-row align-items-center">
+
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInput">Symbol</label>
+                    <input type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Stock Symbol" name="symbol" v-model="item.ticker">
+                </div>
+
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInputGroup">Collection</label>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">TAG</div>
+                        </div>
+                        <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Collection" name="collection" v-model="item.tags">
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInput">Quantity</label>
+                    <input type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Quantity" name="quantity" v-model.number="item.quantity" >
+                </div>
+
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-2" v-on:click.prevent="addItem(item)">Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</template>
+
+<script>
+    var portfolio_add = Vue.component('portfolio-add', {
+        template: '#portfolio-add-template',
+        props: ['account'],
+        data: function () {
+            return {
+                //account: {},
+                item: {},
+            };
+        },
+        methods: {
+            async addItem(item) {
+
+                item.accountId = this.account.accountId;
+
+                const { data } = await axios.post('/api/account', new c3o.Core.Data.InvestmentResponse(item));
+ 
+                if (data.quantity > 0) {
+                    this.account.investments.push(new c3o.Core.Data.Investment(data));
+                }
+            },
+        },
+    });
+</script>

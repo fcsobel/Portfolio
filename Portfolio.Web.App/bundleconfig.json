@@ -1,0 +1,25 @@
+[
+  {
+    "outputFileName": "wwwroot/dist/Portfolio/js/portfolio-app.js",
+    "inputFiles": [
+      "app/models/main.js",
+      "app/models/User.js",
+      "app/models/Account.js",
+      "app/models/Dividend.js",
+      "app/models/Investment.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/dist/Portfolio/js/portfolio-app.min.js",
+    "inputFiles": [
+      "app/models/main.js",
+      "app/models/User.js",
+      "app/models/Account.js",
+      "app/models/Investment.js",
+      "app/models/Dividend.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  }
+]

@@ -1,0 +1,213 @@
+﻿<template id="portfolio-dividend-list-template">
+    <div>
+
+        <table class="table table-bordered table-sm table-striped" style="margin:0;">
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>dividend</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in months" style="text-align:right;">
+                    <td>{{item.month}}</td>
+                    <td>{{item.total | currency}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td>{{totalIncome | currency}}</td>
+                </tr>
+            </tfoot>
+        </table>
+
+
+        @*<div v-if="account.investments.length === 0">Loading...</div>*@
+        <table class="table table-bordered table-sm table-striped" style="margin:0;">
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>dividend</td>
+                    <td>date</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in dividends" style="text-align:right;">
+                    <td>{{item.investment.ticker}}</td>
+                    <td>{{item.Total() | currency}}</td>
+                    <td>{{item.date}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td>{{totalIncome | currency}}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+</template>
+
+<script>
+    var portfolio_dividend_list = Vue.component('portfolio-dividend-list', {
+        template: '#portfolio-dividend-list-template',
+        props: ['account'],
+        data: function () {
+            return {
+                newItem: { quantity: null },
+                ascending: true
+            };
+        },
+        methods: {
+            sort(column) {
+                if (column == 'ticker') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.ticker > b.ticker) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.ticker < b.ticker) ? 1 : -1)
+                    }                    
+                }
+                if (column == 'quantity') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.quantity > b.quantity) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1)
+                    }
+                }
+                if (column == 'price') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.price > b.price) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.price < b.price) ? 1 : -1)
+                    }
+                }
+                if (column == 'Dividend') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.dividend > b.dividend) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.dividend < b.dividend) ? 1 : -1)
+                    }
+                }
+                if (column == 'Total') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.Price() > b.Price()) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.Price() < b.Price()) ? 1 : -1)
+                    }
+                }
+                if (column == 'Income') {
+                    if (this.ascending) {
+                        this.account.investments.sort((a, b) => (a.Income()  > b.Income()) ? 1 : -1)
+                    }
+                    else {
+                            this.account.investments.sort((a, b) => (a.Income()  < b.Income()) ? 1 : -1)
+                    }
+                }
+                this.ascending = !this.ascending;                    
+            },
+            async removeItem(item, index) {
+                this.account.investments.splice(index, 1)
+                item.quantity = 0;
+                const { data } = await axios.post('/api/account', new c3o.Core.Data.InvestmentResponse(item));
+            },
+            async updateItem(item, index) {
+
+                const { data } = await axios.post('/api/account', new c3o.Core.Data.InvestmentResponse(item));
+
+                item.ticker = data.ticker;
+                item.price = data.price;
+                item.dividend = data.dividend;
+                item.quantity = data.quantity;
+                //item.investmentId = data.investmentId;
+
+                // remove item 
+                if (item.quantity == 0) {
+                    this.account.investments.splice(index, 1)
+                }
+            },
+            async refreshItem(item) {
+                if (item.quantity > 0) {
+                    const { data } = await axios.post('/api/account/refresh', new c3o.Core.Data.InvestmentResponse(item));
+                    if (data) {
+                        //item.ticker = data.ticker;
+                        item.price = data.price;
+                        item.dividend = data.dividend;
+                        item.quantity = data.quantity;
+                        //console.log(data, item);
+                        //this.newItem = item;
+                    }
+                    //item.investmentId = data.investmentId;
+                }
+                
+            },
+
+            async addItem(item) {
+
+                if (item.quantity > 0) {
+
+                    item.accountId = this.account.accountId;
+
+                    const { data } = await axios.post('/api/account', new c3o.Core.Data.InvestmentResponse(item));
+
+                    if (data.quantity > 0) {
+                        this.account.investments.push(new c3o.Core.Data.Investment(data));
+
+                        this.newItem = { quantity: null };
+
+                        this.$refs.newstock.focus();
+                    }
+                }
+            },
+
+        },
+        computed: {
+            months: function () {
+                if (this.account && this.account.investments) {
+                    return this.account.Months();
+                }
+                else {
+                    return [];
+                }
+            },
+            dividends: function () {
+                if (this.account && this.account.investments) {
+                    return this.account.Dividends();
+                }
+                else {
+                    return [];
+                }
+                //merged = [];
+
+                //if (this.account && this.account.investments) {
+                //    this.account.investments.forEach(function (item) {
+                //        merged.push(item.dividends);
+                //    });
+                //}
+
+                //return merged.flat();
+            },
+            totalIncome: function () {
+                return this.dividends.reduce(function (total, item) {
+                    return total + (item.Total());
+                }, 0);
+            },
+        }
+        //computed: {
+        //    totalPrice: function () {
+        //        var sum = 0;
+        //        this.account.investments.forEach(e => {
+        //            sum += e.price;
+        //        });
+        //        return sum
+        //    }
+        //}
+    });
+</script>
