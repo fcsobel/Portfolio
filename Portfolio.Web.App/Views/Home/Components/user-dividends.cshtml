@@ -1,0 +1,36 @@
+﻿<template id="user-dividends-template">
+        <div class="card" v-if="user">
+            <table class="table table-bordered table-sm table-striped" style="margin:0;">
+                <thead>
+                    <tr>
+                        <td>Jan</td>
+                        <td>Feb</td>
+                        <td>Mar</td>
+                        <td>Apr</td>
+                        <td>May</td>
+                        <td>Jun</td>
+                        <td>Jul</td>
+                        <td>Aug</td>
+                        <td>Sep</td>
+                        <td>Oct</td>
+                        <td>Nov</td>
+                        <td>Dec</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td v-for="item in user.Months()" style="text-align:right;">
+                            <span>{{item.total | currency('$',0)}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+</template>
+
+<script>
+    var user_dividends = Vue.component('user-dividends', {
+        template: '#user-dividends-template',
+        props: ['user']
+    });
+</script>
