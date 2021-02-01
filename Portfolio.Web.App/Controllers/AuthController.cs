@@ -14,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Portfolio.Web.App.Controllers
@@ -39,22 +41,41 @@ namespace Portfolio.Web.App.Controllers
             return View(new LoginModel { ReturnUrl = returnUrl });
         }
 
+        private static string getHash(string text)
+        {
+            // SHA512 is disposable by inheritance.  
+            using (var sha256 = SHA256.Create())
+            {
+                // Send a sample text to hash.  
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(text));
+                // Get the hashed string.  
+                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            }
+        }
+
         [HttpPost]
         [Route("")]
         public async Task<ActionResult> Login(LoginModel model)
         {
-            if (model.Login != "fred.sobel@gmail.com")
-            {
-                return Unauthorized();
-            }
+            //var passwordHasher = new PasswordHasher<string>();
+            //var _passwordHash = passwordHasher.HashPassword(model.Login, model.Password);
+            var _passwordHash = getHash(model.Password);
+
+            var user = _portfolioContext
+                .Users
+                .Include(x=>x.LoginProfiles)
+                .Where(x => x.UserName == model.Login && x.PasswordHash == _passwordHash && x.PasswordHash != null).FirstOrDefault();
+
+            if (user == null) { return Unauthorized(); }
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim(ClaimTypes.Name, model.Login),
-                new Claim(ClaimTypes.Role, "admin"),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, "user"),
             };
-
+           
             // identity for autrhenication scheme
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -147,9 +168,9 @@ namespace Portfolio.Web.App.Controllers
                 if (user == null)
                 {
                     // hash password
-                    var passwordHasher = new PasswordHasher<string>();
-                    var _passwordHash = passwordHasher.HashPassword(externalEmail, "welcome");
-                    user = new Portfolio.Data.Model.User() { Email = externalEmail, UserName = externalEmail, PasswordHash = _passwordHash, };
+                    //var passwordHasher = new PasswordHasher<string>();
+                    //var _passwordHash = passwordHasher.HashPassword(externalEmail, "welcome");
+                    user = new Portfolio.Data.Model.User() { Email = externalEmail, UserName = externalEmail, PasswordHash = null, };
                     _portfolioContext.Users.Add(user);
                     _portfolioContext.SaveChanges();
                 }
@@ -191,7 +212,6 @@ namespace Portfolio.Web.App.Controllers
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Role, "google"),
-                    new Claim(ClaimTypes.Role, "admin"),
                     new Claim(ClaimTypes.Role, "user"),
                     //new Claim(ClaimTypes.Role, user.UserId.ToString()),
                     //new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
