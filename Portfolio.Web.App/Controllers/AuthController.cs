@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Portfolio.Data.Context;
 using Portfolio.Data.Model;
+using Portfolio.Data.Service;
 using Portfolio.Web.App.Models;
 using System;
 using System.Collections.Generic;
@@ -26,11 +27,13 @@ namespace Portfolio.Web.App.Controllers
     {
         private readonly ILogger<AuthController> _logger;
         private readonly PortfolioContext _portfolioContext;
+        private readonly DataService _dataservice;
 
-        public AuthController(ILogger<AuthController> logger, PortfolioContext portfolioContext)
+        public AuthController(ILogger<AuthController> logger, PortfolioContext portfolioContext, DataService dataservice)
         {
             _logger = logger;
             _portfolioContext = portfolioContext;
+            _dataservice = dataservice;
         }
 
 
@@ -170,9 +173,19 @@ namespace Portfolio.Web.App.Controllers
                     // hash password
                     //var passwordHasher = new PasswordHasher<string>();
                     //var _passwordHash = passwordHasher.HashPassword(externalEmail, "welcome");
-                    user = new Portfolio.Data.Model.User() { Email = externalEmail, UserName = externalEmail, PasswordHash = null, };
+                    user = new User() { Email = externalEmail, UserName = externalEmail, PasswordHash = null, };
                     _portfolioContext.Users.Add(user);
                     _portfolioContext.SaveChanges();
+
+                    // create started account and investments
+                    var account = await _dataservice.AddAccount(user, "New Account");
+                    await _dataservice.AddInvestment(account, "ACRE", 15000);
+                    await _dataservice.AddInvestment(account, "GGN", 50000);
+                    //await _dataservice.AddInvestment(account, "GGT", 10000);
+                    await _dataservice.AddInvestment(account, "NYMT", 40000);
+                    await _dataservice.AddInvestment(account, "PHK", 30000);
+                    await _dataservice.AddInvestment(account, "T", 6000);
+                    await _dataservice.AddInvestment(account, "XOM", 4000);
                 }
 
                 if (user != null)
