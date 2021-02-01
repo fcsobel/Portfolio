@@ -41,7 +41,6 @@ namespace Portfolio.Web.Api
 
                 var user = await _portfolioContext.Users.Where(x => x.UserName == userName)
                     .Include(x=>x.LoginProfiles)
-                    //.Include(x => x.Accounts).ThenInclude(y => y.Collections)
                     .Include(x => x.Accounts).ThenInclude(y => y.Investments).ThenInclude(i => i.Stock)
                     .Include(x => x.Accounts).ThenInclude(y => y.Investments).ThenInclude(i => i.Stock.PriceHistory)
                     .Include(x => x.Accounts).ThenInclude(y => y.Investments).ThenInclude(i => i.Stock.Dividends)
@@ -56,7 +55,6 @@ namespace Portfolio.Web.Api
                     {
                         if (stock != null)
                         {
-                            //if (stock.CacheDate != null && DateTime.Now.Subtract(stock.CacheDate.Value).Hours <= 1)
                             if (stock.Reload)
                             {
                                 await this._dataService.UpdateStock(stock);

@@ -34,8 +34,8 @@ namespace Portfolio.Data.Service
             this.Configuration = configuration;
             this._logger = logger;
             this._client = new IEXCloudClient(
-                configuration["IEXCloud:ApiKey"], // "pk_1bee91f7e1a1482aa8ac10e47e9e3b5d", 
-                configuration["IEXCloud:Secret"], //  "sk_434f0add98ff4073903aee28d4b1ec24",
+                configuration["IEXCloud:ApiKey"],
+                configuration["IEXCloud:Secret"],
                 signRequest: false, useSandBox: false);
         }
 
