@@ -4,14 +4,6 @@
   - `Add-Migration InitialCreate -Context PortfolioContext`
   - `Update-Database -Context PortfolioContext`
 
-- **Movie DB**
-  - `Add-Migration InitialCreate -Context MovieContext`
-  - `Update-Database`
-
-- **Training DB**
-  - `Add-Migration InitialCreate -Context TrainingContext`
-  - `Update-Database`
-
 - **Commands**
   - **`Add-Migration`** Adds a new migration.
     - `-Name {string}` The name of the migration. This is a positional parameter and is required.
