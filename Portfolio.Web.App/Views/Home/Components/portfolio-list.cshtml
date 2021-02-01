@@ -1,6 +1,5 @@
 ﻿<template id="portfolio-list-template">
     <div>
-        @*<div v-if="account.investments.length === 0">Loading...</div>*@
         <table class="table table-bordered table-sm table-striped" style="margin:0; padding:0;">
             <thead>
                 <tr>
@@ -16,7 +15,6 @@
             <tbody>
                 <tr v-for="(item, index) in account.investments" :key="item.id" style="text-align:right;">
                     <td style="margin:0; padding:0; position:relative;" >
-                        @*<a href="/home/portfolio/"> {{item.ticker}}</a>*@
                         <input class="form-control" v-model="item.ticker" v-on:change="updateItem(item, index)" style="border:none; background-color:transparent; " />
                         <div style="position:absolute; top:6px; right:6px;">{{item.name}}</div>
                     </td>
@@ -140,12 +138,10 @@
                         item.price = data.price;
                         item.dividend = data.dividend;
                         item.quantity = data.quantity;
-                        //console.log(data, item);
                         //this.newItem = item;
                     }
                     //item.investmentId = data.investmentId;
                 }
-                
             },
 
             async addItem(item) {
@@ -185,14 +181,5 @@
                 }, 0);
             }
         }
-        //computed: {
-        //    totalPrice: function () {
-        //        var sum = 0;
-        //        this.account.investments.forEach(e => {
-        //            sum += e.price;
-        //        });
-        //        return sum
-        //    }
-        //}
     });
 </script>

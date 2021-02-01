@@ -118,8 +118,6 @@
                 async getAccounts() {
                     const { data } = await axios.get('/api/account');
 
-                    // todo - convert to js prototype objects with helper methods...etc
-                    //this.user = data;
                     this.user = new c3o.Core.Data.User(data);
 
                     if (this.user.accounts) {
@@ -131,7 +129,7 @@
                     this.account = null;
                 },
                 select(item, index) {
-                    //console.log(this.account, item);
+
                     if (this.account == item) {
                         this.account = null;
                     }
