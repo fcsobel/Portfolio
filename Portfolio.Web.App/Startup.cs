@@ -65,7 +65,7 @@ namespace Portfolio.Web.App
 
             // Services
             services.AddSingleton<IEXService>();
-            services.AddScoped<DataService>();
+            services.AddScoped<PortfolioService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

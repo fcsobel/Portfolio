@@ -33,10 +33,7 @@ namespace Portfolio.Data.Service
         {
             this.Configuration = configuration;
             this._logger = logger;
-            this._client = new IEXCloudClient(
-                configuration["IEXCloud:ApiKey"],
-                configuration["IEXCloud:Secret"],
-                signRequest: false, useSandBox: false);
+            this._client = new IEXCloudClient(configuration["IEXCloud:ApiKey"], configuration["IEXCloud:Secret"], signRequest: false, useSandBox: false);
         }
 
         public async Task<bool> RefreshStock(Stock stock)
