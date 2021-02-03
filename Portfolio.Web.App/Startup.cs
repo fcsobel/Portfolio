@@ -69,8 +69,13 @@ namespace Portfolio.Web.App
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PortfolioContext context)
         {
+            // https://abelsquidhead.com/index.php/2017/07/31/deploying-dbs-in-your-cicd-pipeline-with-ef-core-code-first/
+            // When the environment is hit for the first time after deployment, 
+            // Run all the migrations that haven’t been run yet in the correct order, and your new DB schemas will automatically be deployed.
+            context.Database.Migrate();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

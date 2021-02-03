@@ -5,9 +5,9 @@
 }
 
 <div class="row">
-    <div class="col-md-4"></div>
+    <div class="col-md-4 col-sm-0"></div>
 
-    <div class="col-md-4">
+    <div class="col-md-4 col-sm-12">
 
 
         @if (User?.Identity?.IsAuthenticated == true)
@@ -26,12 +26,15 @@
         else
         {
             <div id="logreg-forms">
-                <form method="post" action="/auth">
-                    <div class="social-login">
+
+                   <div class="social-login">
                         @*<button class="btn btn-dark" type="button"><span><i class="fab fa-facebook-f"></i> Sign in with Facebook</span> </button>*@
                         @*<button class="btn btn-success" type="button"><span><i class="fab fa-google-plus-g"></i> Sign in with Google</span> </button>*@
                         <a class="btn btn-success btn-block" asp-action="LoginWithGoogle" asp-route_returnUrl=""><span><i class="fab fa-google-plus-g"></i> Sign in with Google</span></a>
                     </div>
+
+
+                <!--<form method="post" action="/auth">
 
                     <p style="text-align:center"> OR  </p>
 
@@ -47,16 +50,16 @@
                     <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> Sign in</button>
 
                     <a href="#" id="forgot_pswd">Forgot password?</a>
-                    <hr>
+                    <hr>-->
                     <!-- <p>Don't have an account!</p>  -->
-                    <button class="btn btn-primary btn-block" type="button" id="btn-signup"><i class="fas fa-user-plus"></i> Sign up New Account</button>
+                    <!--<button class="btn btn-primary btn-block" type="button" id="btn-signup"><i class="fas fa-user-plus"></i> Sign up New Account</button>
                 </form>
 
                 <form action="/reset/password/" class="form-reset">
                     <input type="email" id="resetEmail" class="form-control" placeholder="Email address" required="" autofocus="">
                     <button class="btn btn-primary btn-block" type="submit">Reset Password</button>
                     <a href="#" id="cancel_reset"><i class="fas fa-angle-left"></i> Back</a>
-                </form>
+                </form>-->
 
                 @*<form action="/signup/" class="form-signup">
                         <div class="social-login">
@@ -82,5 +85,5 @@
         }
 
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-4 col-sm-0"></div>
 </div>
