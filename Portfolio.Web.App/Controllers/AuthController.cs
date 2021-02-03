@@ -27,9 +27,9 @@ namespace Portfolio.Web.App.Controllers
     {
         private readonly ILogger<AuthController> _logger;
         private readonly PortfolioContext _portfolioContext;
-        private readonly DataService _dataservice;
+        private readonly PortfolioService _dataservice;
 
-        public AuthController(ILogger<AuthController> logger, PortfolioContext portfolioContext, DataService dataservice)
+        public AuthController(ILogger<AuthController> logger, PortfolioContext portfolioContext, PortfolioService dataservice)
         {
             _logger = logger;
             _portfolioContext = portfolioContext;

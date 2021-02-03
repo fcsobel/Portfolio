@@ -1,8 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="row">
+﻿<div class="row">
     <div class="col-md-2"></div>
 
     <div class="col-md-8">
@@ -52,9 +48,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-content">
-
                         <button v-on:click="add()" class="btn btn-success btn-block">Add Account</button>
-
                     </div>
                 </div>
             </div>
@@ -81,9 +75,11 @@
 
     <!--Axios-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!--Models-->
     <script src="/dist/Portfolio/js/portfolio-app.js" asp-append-version="true"></script>
 
-    <!--Vue Component Template & code-->
+    <!--Vue Component Templates & Code -->
     <partial name="Components/portfolio-list" />
     <partial name="Components/portfolio-dividend-list" />
     <partial name="Components/portfolio-add" />
@@ -131,9 +127,11 @@
                 select(item, index) {
 
                     if (this.account == item) {
+                        // de-select
                         this.account = null;
                     }
                     else {
+                        // select
                         this.account = item;
 
                         // sort
