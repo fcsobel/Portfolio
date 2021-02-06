@@ -36,36 +36,6 @@ namespace Portfolio.Web.Api
 
             var user = await _portfolioService.GetUserAccounts(userName);
 
-            //var user = await _portfolioContext.Users.Where(x => x.UserName == userName)
-            //    .Include(x=>x.LoginProfiles)
-            //    .Include(x => x.Accounts).ThenInclude(y => y.Investments).ThenInclude(i => i.Stock)
-            //    .Include(x => x.Accounts).ThenInclude(y => y.Investments).ThenInclude(i => i.Stock.PriceHistory)
-            //    .Include(x => x.Accounts).ThenInclude(y => y.Investments).ThenInclude(i => i.Stock.Dividends)
-            //    .FirstOrDefaultAsync();
-
-            //var stocks = user.Accounts.SelectMany(x => x.Investments).Select(x => x.Stock).Distinct().ToList();
-
-            //try
-            //{
-            //    // update each stock
-            //    foreach (var stock in stocks)
-            //    {
-            //        if (stock != null)
-            //        {
-            //            if (stock.Reload)
-            //            {
-            //                await this._dataService.UpdateStock(stock);
-            //            }
-            //        }
-            //    }
-            //    _logger.LogInformation("{stocks} updated", stocks.Count);
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError(ex.Message, ex);
-            //}
-
-
             if (user != null)
             {
                 return new User(user);
@@ -103,7 +73,6 @@ namespace Portfolio.Web.Api
             var userName = User.Identity.Name;
 
             var user = await _portfolioService.GetUser(userName);
-            //var user = await _portfolioContext.Users.Where(x => x.UserName == userName).Include(x => x.Accounts).FirstOrDefaultAsync();
 
             if (user != null)
             {
@@ -114,8 +83,6 @@ namespace Portfolio.Web.Api
                 {
                     await _portfolioService.DeleteAccount(account.AccountId);
                     
-                    //_portfolioContext.Accounts.Remove(account);
-                    //_portfolioContext.SaveChanges();
                     return true;
                 }
             }
@@ -130,9 +97,6 @@ namespace Portfolio.Web.Api
             var userName = User.Identity.Name;
 
             var user = await _portfolioService.GetUser(userName);
-            //var user = await _portfolioContext.Users.Where(x => x.UserName == userName)
-            //    .Include(x => x.Accounts)
-            //    .FirstOrDefaultAsync();
 
             if (user != null)
             {
@@ -176,9 +140,6 @@ namespace Portfolio.Web.Api
             var userName = User.Identity.Name;
 
             var user = await _portfolioService.GetUser(userName);
-            //var user = _portfolioContext.Users.Where(x => x.UserName == userName)
-            //    .Include(x => x.Accounts)
-            //    .FirstOrDefault();
 
             if (user != null)
             {
@@ -188,67 +149,16 @@ namespace Portfolio.Web.Api
 
                     if (accountObj != null)
                     {
-                        //var accountObj = _PortfolioContext.Accounts.Where(x => x.Url == account).FirstOrDefault();
                         Portfolio.Data.Model.Investment item = null;
 
                         if (obj.InvestmentId > 0)
                         {
                             item = await _portfolioService.UpdateInvestment(obj.InvestmentId, obj.Ticker, obj.Quantity);
-
-                            //item = _portfolioContext.Investments.Where(x => x.InvestmentId == obj.InvestmentId)
-                            //    .Include(x => x.Stock)
-                            //    .FirstOrDefault();
-                            //if (item != null)
-                            //{
-                            //    if (obj.Ticker != item.Stock.Ticker)
-                            //    {
-                            //        if (!string.IsNullOrWhiteSpace(obj.Ticker))
-                            //        {
-                            //            var stock = await this._dataService.GetStock(obj.Ticker).ConfigureAwait(false);
-                            //            if (stock != null)
-                            //            {
-                            //                item.Stock = stock;
-                            //                item.StockId = stock.StockId;
-                            //                _portfolioContext.SaveChanges();
-                            //            }
-                            //        }
-                            //    }
-                            //    if (obj.Quantity > 0)
-                            //    {
-                            //        item.Quantity = obj.Quantity;
-                            //        _portfolioContext.SaveChanges();
-                            //    }
-                            //    else
-                            //    {
-                            //        item.Quantity = 0;
-                            //        _portfolioContext.Investments.Remove(item);
-                            //        _portfolioContext.SaveChanges();
-                            //    }
-                            //}
                         }
                         else
                         {
                             item = await _portfolioService.AddInvestment(accountObj, obj.Ticker, obj.Quantity);
-
-                            //if (!string.IsNullOrWhiteSpace(obj.Ticker))
-                            //{
-                            //    var stock = await this._dataService.GetStock(obj.Ticker).ConfigureAwait(false);
-                            //    if (stock != null)
-                            //    {
-                            //        item = new Portfolio.Data.Model.Investment()
-                            //        {
-                            //            Stock = stock,
-                            //            StockId = stock.StockId,
-                            //            Account = accountObj,
-                            //            Quantity = obj.Quantity
-
-                            //        };
-                            //        _portfolioContext.Investments.Add(item);
-                            //        _portfolioContext.SaveChanges();
-                            //    }
-                            //}
                         }
-
                         return new Investment(item);
                     }
                 }
@@ -267,9 +177,6 @@ namespace Portfolio.Web.Api
             var userName = User.Identity.Name;
             
             var user = await _portfolioService.GetUser(userName);
-            //var user = _portfolioContext.Users.Where(x => x.UserName == userName)
-            //    .Include(x => x.Accounts)
-            //    .FirstOrDefault();
 
             if (user != null)
             {
@@ -309,7 +216,6 @@ namespace Portfolio.Web.Api
                 }
 
             }
-
             return null;
         }
     }
