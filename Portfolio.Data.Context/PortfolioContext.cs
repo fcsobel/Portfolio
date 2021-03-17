@@ -16,6 +16,8 @@ namespace Portfolio.Data.Context
         public DbSet<StockDividend> StockDividend { get; set; }
         public DbSet<StockPrice> StockPrice { get; set; }
         public DbSet<LoginProfile> LoginProfiles { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserAccess> UserAccess { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +29,8 @@ namespace Portfolio.Data.Context
             modelBuilder.ApplyConfiguration(new StockPriceMap());
             modelBuilder.ApplyConfiguration(new StockDividendMap());
             modelBuilder.ApplyConfiguration(new LoginProfileConfig());
+            modelBuilder.ApplyConfiguration(new RoleMap());
+            modelBuilder.ApplyConfiguration(new UserAccessMap());
         }
     }
 }
