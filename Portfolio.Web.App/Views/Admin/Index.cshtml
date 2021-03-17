@@ -1,0 +1,34 @@
+﻿@model List<Portfolio.Data.Model.User>
+
+<div class="row">
+    <div class="col-md-2">
+        
+    </div>
+
+    <div class="col-md-8">
+
+        <table class="table table-bordered table-sm table-striped" style="margin:0; padding:0;">
+            <thead>
+                <tr>
+                    <th>UserName</th>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>@item.UserName</td>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+    <div class="col-md-2">
+    </div>
+</div>

@@ -1,0 +1,38 @@
+﻿@model Portfolio.Data.Model.User
+
+<div class="row">
+    <div class="col-md-2">
+        
+    </div>
+
+    <div class="col-md-8">
+
+        <table class="table table-bordered table-sm table-striped" style="margin:0; padding:0;">
+            <thead>
+                <tr>
+                    <th>UserName</th>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (User != null)
+                {
+                    int i = 0;
+
+                    foreach (var item in Model.Roles)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Description</td>
+                            <td><input type="checkbox" asp-for="@Model.Roles[i].RoleId" /></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+    <div class="col-md-2">
+    </div>
+</div>

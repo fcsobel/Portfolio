@@ -66,7 +66,8 @@ namespace Portfolio.Web.App.Controllers
 
             var user = _portfolioContext
                 .Users
-                .Include(x=>x.LoginProfiles)
+                .Include(x => x.LoginProfiles)
+                .Include(x => x.UserAccess)
                 .Where(x => x.UserName == model.Login && x.PasswordHash == _passwordHash && x.PasswordHash != null).FirstOrDefault();
 
             if (user == null) { return Unauthorized(); }
@@ -78,7 +79,12 @@ namespace Portfolio.Web.App.Controllers
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, "user"),
             };
-           
+
+            foreach (var role in user.Roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role.Name));
+            }
+
             // identity for autrhenication scheme
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -151,6 +157,7 @@ namespace Portfolio.Web.App.Controllers
             var profile = _portfolioContext.LoginProfiles
                 .Where(x => x.ProviderKey == externalKey && x.ProviderName == "Google")
                 .Include(x => x.User)
+                .Include(x => x.User.UserAccess).ThenInclude(y => y.Role)
                 .FirstOrDefault();
 
             if (profile != null)
@@ -165,7 +172,9 @@ namespace Portfolio.Web.App.Controllers
             if (user == null)
             {
                 // get user by google id & create profile
-                user = _portfolioContext.Users.Where(x => x.UserName == externalEmail).FirstOrDefault();
+                user = _portfolioContext.Users.Where(x => x.UserName == externalEmail)
+                    .Include(x => x.UserAccess).ThenInclude(y => y.Role)
+                    .FirstOrDefault();
 
                 // create user if needed
                 if (user == null)
@@ -173,7 +182,7 @@ namespace Portfolio.Web.App.Controllers
                     // hash password
                     //var passwordHasher = new PasswordHasher<string>();
                     //var _passwordHash = passwordHasher.HashPassword(externalEmail, "welcome");
-                    user = new User() { Email = externalEmail, UserName = externalEmail, PasswordHash = null, };
+                    user = new User() { Email = externalEmail, UserName = externalEmail, PasswordHash = null };
                     _portfolioContext.Users.Add(user);
                     _portfolioContext.SaveChanges();
 
@@ -233,6 +242,11 @@ namespace Portfolio.Web.App.Controllers
                 {
                     claims.Add(new Claim(claimn.Type, claimn.Value));
                 }
+            }
+
+            foreach (var role in user.Roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role.Name));
             }
 
             // create identity for cookie scheme

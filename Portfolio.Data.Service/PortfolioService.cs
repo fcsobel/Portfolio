@@ -62,6 +62,8 @@ namespace Portfolio.Data.Service
         {
             try
             {
+                await this.UpdateStockList(stocks);
+
                 // update each stock
                 foreach (var stock in stocks)
                 {
@@ -191,6 +193,16 @@ namespace Portfolio.Data.Service
             return stock;
         }
 
+        public async Task<bool> UpdateStockList(List<Stock> list)
+        {
+            var stocks = list.FindAll(x => x.Name != "$");
+
+            await _iexService.RefreshStockLite(stocks);
+
+            var repsonse = await _portfolioContext.SaveChangesAsync();
+
+            return true;
+        }
 
         public async Task<Stock> UpdateStock(Stock stock)
         {

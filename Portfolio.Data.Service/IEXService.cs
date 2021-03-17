@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using c3o.Core;
 using IEXSharp;
+using IEXSharp.Model.CoreData.InvestorsExchangeData.Response;
 using IEXSharp.Model.CoreData.ReferenceData.Response;
 using IEXSharp.Model.CoreData.StockFundamentals.Response;
 using IEXSharp.Model.CoreData.StockPrices.Request;
@@ -36,15 +37,39 @@ namespace Portfolio.Data.Service
             this._client = new IEXCloudClient(configuration["IEXCloud:ApiKey"], configuration["IEXCloud:Secret"], signRequest: false, useSandBox: false);
         }
 
+        //public async Task<bool> GetSymbols()
+        //{
+            
+        //}
+
+        public async Task<bool> RefreshStockLite(List<Stock> list)
+        {
+            var symbols = list.Select(x => x.Ticker).Take(10);
+
+            var data = await this.LastAsync(symbols);
+
+            foreach (var item in data)
+            {
+                var stock = list.Find(x => x.Ticker == item.symbol);
+
+                if (stock != null)
+                {
+                    stock.Price = item.price;
+                }
+            }
+
+            return true;
+        }
+
         public async Task<bool> RefreshStock(Stock stock)
         {
             try
             {
-                //var company = await this.CompanyAsync(stock.Ticker);
-                //if (company != null)
-                //{
-                //    stock.Name = company.companyName;
-                //}
+                var company = await this.CompanyAsync(stock.Ticker);
+                if (company != null)
+                {
+                    stock.Name = company.companyName;
+                }
 
                 // get price target
                 var target = await this.PriceTargetAsync(stock.Ticker);
@@ -187,6 +212,44 @@ namespace Portfolio.Data.Service
             var response = await _client.StockProfiles.CompanyAsync(symbol);
             return response.Data;
         }
+
+        public async Task<IEnumerable<SymbolResponse>> SymbolsAsync(string symbol)
+        {
+            var response = await _client.ReferenceData.SymbolsAsync();
+            return response.Data;
+        }
+
+        public async Task<IEnumerable<SymbolCryptoResponse>> SymbolCryptoAsync(string symbol)
+        {
+            var response = await _client.ReferenceData.SymbolCryptoAsync();
+            return response.Data;
+        }
+
+        public async Task<IEnumerable<SymbolMutualFundResponse>> SymbolsMutualFundAsync(string symbol)
+        {
+            var response = await _client.ReferenceData.SymbolsMutualFundAsync();
+            return response.Data;
+        }
+
+
+        public async Task<IEnumerable<TagResponse>> TagsAsync(string symbol)
+        {
+            var response = await _client.ReferenceData.TagsAsync();
+            return response.Data;
+        }
+
+        public async Task<IEnumerable<LastResponse>> LastAsync(string symbol)
+        {
+            var response = await _client.InvestorsExchangeDataService.LastAsync(new List<string> { symbol });
+            return response.Data;
+        }
+
+        public async Task<IEnumerable<LastResponse>> LastAsync(IEnumerable<string> symbols)
+        {
+            var response = await _client.InvestorsExchangeDataService.LastAsync(symbols);
+            return response.Data;
+        }
+
 
         /// <summary>
         /// Provides basic dividend data for US equities, ETFs, and Mutual Funds for the last 5 years. 
