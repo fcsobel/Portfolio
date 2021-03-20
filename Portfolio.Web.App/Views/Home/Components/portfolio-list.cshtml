@@ -15,8 +15,8 @@
             <tbody>
                 <tr v-for="(item, index) in account.investments" :key="item.id" style="text-align:right;">
                     <td style="margin:0; padding:0; position:relative;" >
-                        <input class="form-control" v-model="item.ticker" v-on:change="updateItem(item, index)" style="border:none; background-color:transparent; " />
-                        <div style="position:absolute; top:6px; right:6px;">{{item.name}}</div>
+                       <input class="form-control" v-model="item.ticker" v-on:change="updateItem(item, index)" style="border:none; background-color:transparent; " />
+                       <div style="position:absolute; top:31px; right:6px; font-size:8px; color:darkgreen; ">{{item.name}}</div>
                     </td>
                     <td style="margin:0; padding:0;">
                         <input class="form-control" v-model.number="item.quantity" v-on:change="updateItem(item, index)" style="border:none; background-color:transparent;  text-align:right;" />
@@ -31,7 +31,7 @@
             <tfoot>
                 <tr class="success" style="text-align:right;">
                     <td style="margin:0; padding:0;">
-                        <input ref="newstock" class="form-control" v-model="newItem.ticker" v-on:change="addItem(newItem)" style="border:none; background-color:transparent; " />
+                        <input ref="newstock" class="form-control" v-model="newItem.ticker" v-on:change="addItem(newItem)" style="border:none; background-color:transparent;" autofocus  />
                     </td>
                     <td style="margin:0; padding:0;">
                         <input class="form-control" v-model.number="newItem.quantity" v-on:change="addItem(newItem)" style="border:none; background-color:transparent;  text-align:right;" />
@@ -65,15 +65,15 @@
                         this.account.investments.sort((a, b) => (a.ticker > b.ticker) ? 1 : -1)
                     }
                     else {
-                            this.account.investments.sort((a, b) => (a.ticker < b.ticker) ? 1 : -1)
-                    }                    
+                        this.account.investments.sort((a, b) => (a.ticker < b.ticker) ? 1 : -1)
+                    }
                 }
                 if (column == 'quantity') {
                     if (this.ascending) {
                         this.account.investments.sort((a, b) => (a.quantity > b.quantity) ? 1 : -1)
                     }
                     else {
-                            this.account.investments.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1)
+                        this.account.investments.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1)
                     }
                 }
                 if (column == 'price') {
@@ -81,7 +81,7 @@
                         this.account.investments.sort((a, b) => (a.price > b.price) ? 1 : -1)
                     }
                     else {
-                            this.account.investments.sort((a, b) => (a.price < b.price) ? 1 : -1)
+                        this.account.investments.sort((a, b) => (a.price < b.price) ? 1 : -1)
                     }
                 }
                 if (column == 'Dividend') {
@@ -89,7 +89,7 @@
                         this.account.investments.sort((a, b) => (a.dividend > b.dividend) ? 1 : -1)
                     }
                     else {
-                            this.account.investments.sort((a, b) => (a.dividend < b.dividend) ? 1 : -1)
+                        this.account.investments.sort((a, b) => (a.dividend < b.dividend) ? 1 : -1)
                     }
                 }
                 if (column == 'Total') {
@@ -97,7 +97,7 @@
                         this.account.investments.sort((a, b) => (a.Price() > b.Price()) ? 1 : -1)
                     }
                     else {
-                            this.account.investments.sort((a, b) => (a.Price() < b.Price()) ? 1 : -1)
+                        this.account.investments.sort((a, b) => (a.Price() < b.Price()) ? 1 : -1)
                     }
                 }
                 if (column == 'Income') {
@@ -105,10 +105,10 @@
                         this.account.investments.sort((a, b) => (a.Income()  > b.Income()) ? 1 : -1)
                     }
                     else {
-                            this.account.investments.sort((a, b) => (a.Income()  < b.Income()) ? 1 : -1)
+                        this.account.investments.sort((a, b) => (a.Income()  < b.Income()) ? 1 : -1)
                     }
                 }
-                this.ascending = !this.ascending;                    
+                this.ascending = !this.ascending;
             },
             async removeItem(item, index) {
                 this.account.investments.splice(index, 1)
