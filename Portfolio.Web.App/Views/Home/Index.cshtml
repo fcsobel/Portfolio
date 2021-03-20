@@ -1,5 +1,10 @@
 ﻿<div class="row">
-    <div class="col-md-2"></div>
+    <div class="col-md-2">
+          <autocomplete
+                :search="search"
+                placeholder="Search for a country"
+                aria-label="Search for a country"></autocomplete>
+    </div>
 
     <div class="col-md-8">
 
@@ -60,6 +65,10 @@
     </div>
 </div>
 
+@section head
+{
+    <link rel="stylesheet" href="https://unpkg.com/@@trevoreyre/autocomplete-vue/dist/style.css">
+}
 
 @section scripts
 {
@@ -76,6 +85,9 @@
     <!--Axios-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+    <!--Autocmplete-->
+    <script src="https://unpkg.com/@@trevoreyre/autocomplete-vue"></script>
+
     <!--Models-->
     <script src="/dist/Portfolio/js/portfolio-app.js" asp-append-version="true"></script>
 
@@ -86,6 +98,7 @@
     <partial name="Components/portfolio-summary" />
     <partial name="Components/user-summary" />
     <partial name="Components/user-dividends" />
+    @*<partial name="Components/Autocomplete" />*@
 
     <!--Load vue app-->
     <script type="text/javascript">
@@ -98,10 +111,15 @@
                 'portfolio-add': portfolio_add,
                 'portfolio-summary': portfolio_summary,
                 'user-summary': user_summary,
-                'user-dividends': user_dividends
+                'user-dividends': user_dividends,
+                'autocomplete': Autocomplete
             },
             data: function () {
                 return {
+                    selected:  "test",                    
+                    countries: [
+                        'Bangalore', 'Chennai', 'Cochin', 'Delhi', 'Kolkata', 'Mumbai'
+                    ],
                     user: {
                         Price: function () { return 0; },
                         Income: function () { return 0; },
@@ -123,6 +141,15 @@
                     }
 
                     this.account = null;
+
+                    //this.$refs.newstock.focus();
+                },
+                search(input) {
+                    if (input.length < 1) { return [] }
+                    return this.countries.filter(country => {
+                        return country.toLowerCase()
+                            .startsWith(input.toLowerCase())
+                    })
                 },
                 select(item, index) {
 
