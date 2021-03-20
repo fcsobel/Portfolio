@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="c3o.Core" Version="1.1.0" />
-    <PackageReference Include="VSLee.IEXSharp" Version="2.5.0" />
+    <PackageReference Include="VSLee.IEXSharp" Version="2.7.0" />
   </ItemGroup>
 
   <ItemGroup>
