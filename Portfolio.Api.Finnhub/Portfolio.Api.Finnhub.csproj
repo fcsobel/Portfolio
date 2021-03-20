@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NSwag.MSBuild" Version="13.10.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Debug $(NSwagExe_Core30) swagger2csclient  /parameterDateTimeFormat:&quot;yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz&quot; /classname:FinnhubClient /namespace:Portfolio.Api.Finnhub /classstyle:Poco /exceptionClass:FinnhubApiException /arrayType:System.Collections.Generic.List /arrayInstanceType:System.Collections.Generic.List /arrayBaseType:System.Collections.Generic.List	/dateType:System.DateTime /dateTimeType:System.DateTime /timeType:System.TimeSpan /timeSpanType:System.TimeSpan /injectHttpClient:true /generateExceptionClasses:false  /OperationGenerationMode:SingleClientFromOperationId /input:&quot;$(ProjectDir)FinnhubClient\FinnhubClient.json&quot; /output:&quot;$(ProjectDir)FinnhubClient\FinnhubClient.cs&quot;" />
+  </Target>
+
+</Project>

@@ -1,0 +1,441 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "finnhub.io",
+    "version": "3.0.0.96",
+    "title": "Finnhub"
+  },
+  "servers": [
+    {
+      "url": "https://finnhub.io/api/v1"
+    },
+  ],
+  "security": [
+    {
+      "ApiKey": []
+    }
+  ],
+  "paths": {
+    "/stock/exchange": {
+      "get": {
+        "tags": [ "Exchange" ],
+        "operationId": "GetExchanges",
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "x-nullable": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stock/price-target": {
+      "get": {
+        "tags": [ "Symbol" ],
+        "operationId": "GetSymbols",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "x-nullable": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "x-nullable": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PriceTarget"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stock/symbol": {
+      "get": {
+        "tags": [ "Symbol" ],
+        "operationId": "GetSymbols",
+        "parameters": [
+          {
+            "name": "exchange",
+            "in": "query",
+            "x-nullable": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "x-nullable": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Symbol"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stock/profile2": {
+      "get": {
+        "tags": [ "Company" ],
+        "operationId": "GetCompany",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "x-nullable": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isin",
+            "in": "query",
+            "x-nullable": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "CUSIP",
+            "in": "query",
+            "x-nullable": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "x-nullable": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stock/metric": {
+      "get": {
+        "tags": [ "Metric" ],
+        "operationId": "Metric",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "x-nullable": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "metric",
+            "in": "query",
+            "x-nullable": true,
+            "schema": {
+              "$ref": "#/components/schemas/MetricType"
+            }
+          }          
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "x-nullable": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quote": {
+      "get": {
+        "tags": [ "Quote" ],
+        "operationId": "Quote",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "x-nullable": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "x-nullable": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quote"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "name": "token",
+        "in": "query"
+      }
+    },
+    "schemas": {
+      "PriceTarget": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "lastUpdated": {            "type": "string",            "format": "date-time",            "nullable": true          },          "symbol": { "type": "number", "format": "decimal" },
+          "targetHigh": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "targetLow": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "targetMean": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "targetMedian": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "Symbol": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "description": { "type": "string" },
+          "displaySymbol": { "type": "string" },
+          "symbol": { "type": "string" }
+        }
+      },
+      "Company": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "country": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "exchange": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ticker": {
+            "type": "string"
+          },
+          "ipo": {
+            "type": "string"
+          },
+          "marketCapitalization": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "shareOutstanding": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "weburl": {
+            "type": "string"
+          },
+          "finnhubIndustry": {
+            "type": "string"
+          },
+          "t": { "type": "string" }
+        }
+      },
+      "Quote": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [ ],
+        "properties": {
+          "c": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "h": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "l": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "o": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "pc": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "t": { "type": "string" }
+        }
+      },
+      "MetricResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [ "metricType", "symbol", "metric" ],
+        "properties": {
+          "metricType": {
+            "$ref": "#/components/schemas/MetricType"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "metric": {
+            "$ref": "#/components/schemas/Metric"
+          }
+        }
+      },
+      "Metric": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "dividendGrowthRate5Y": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "dividendPerShare5Y": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "dividendPerShareAnnual": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "dividendYield5Y": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "dividendYieldIndicatedAnnual": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "dividendsPerShareTTM": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "52WeekHigh": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "52WeekHighDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "52WeekLow": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "52WeekLowDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "10DayAverageTradingVolume": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "13WeekPriceReturnDaily": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "26WeekPriceReturnDaily": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "MetricType": {
+        "type": "string",
+        "enum": [ "all", "price", "valuation", "margin" ]
+      }
+    }
+  }
+}
